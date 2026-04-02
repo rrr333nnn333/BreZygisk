@@ -2,6 +2,26 @@ import { fullScreen, exec, toast } from './kernelsu.js'
 
 import { setNewLanguage, getTranslations } from './language.js'
 
+;(() => {
+	const element = document.getElementById("umount_toggle")
+
+	exec("[ -e '/data/adb/modules/brezygisk/disable_unmount' ]").then(result => {
+		if (result.errno !== 0) {
+			element.setAttribute('checked', '')
+		}
+	})
+
+	element.addEventListener('click', async () => {
+		const enabled = element.checked
+
+		if (enabled) {
+			exec("rm -f /data/adb/modules/brezygisk/disable_unmount")
+		} else {
+			exec("touch /data/adb/modules/brezygisk/disable_unmount")
+		}
+	})
+})()
+
 export function setError(place, issue) {
   const fullErrorLog = setErrorData(`${place}: ${issue}`)
   document.getElementById('errorh_panel').innerHTML = fullErrorLog

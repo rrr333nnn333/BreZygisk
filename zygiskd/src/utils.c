@@ -631,6 +631,10 @@ bool parse_mountinfo(const char *restrict pid, struct mountinfos *restrict mount
 }
 
 bool umount_root(struct root_impl impl) {
+  if (access("/data/adb/modules/brezygisk/disable_unmount", F_OK) == 0) {
+		return false;
+  }
+
   /* INFO: We are already in the target pid mount namespace, so actually,
              when we use self here, we meant its pid.
   */
