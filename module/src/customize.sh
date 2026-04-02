@@ -1,3 +1,6 @@
+# Hot Install Support
+export MODULE_HOT_INSTALL_REQUEST="true"
+
 # shellcheck disable=SC2034
 SKIPUNZIP=1
 
