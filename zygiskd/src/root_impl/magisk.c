@@ -11,13 +11,13 @@
 #include "../utils.h"
 #include "common.h"
 
-const char *supported_variants[] = {
-  "kitsune"
-};
+// const char *supported_variants[] = {
+//   "kitsune"
+// };
 
 const char *magisk_managers[] = {
-  "com.topjohnwu.magisk",
-  "io.github.huskydg.magisk"
+  "com.topjohnwu.magisk"
+  // "io.github.huskydg.magisk"
 };
 
 #define SBIN_MAGISK LP_SELECT("/sbin/magisk32", "/sbin/magisk64")
@@ -65,14 +65,14 @@ void magisk_get_existence(struct root_impl_state *state) {
 
   state->variant = (uint8_t)MOfficial;
 
-  for (unsigned long i = 0; i < sizeof(supported_variants) / sizeof(supported_variants[0]); i++) {
-    if (!strstr(magisk_info, supported_variants[i])) continue;
+  // for (unsigned long i = 0; i < sizeof(supported_variants) / sizeof(supported_variants[0]); i++) {
+  //   if (!strstr(magisk_info, supported_variants[i])) continue;
 
-    variant = (enum magisk_variants)(i + 1);
-    state->variant = (uint8_t)variant;
+  //   variant = (enum magisk_variants)(i + 1);
+  //   state->variant = (uint8_t)variant;
 
-    break;
-  }
+  //   break;
+  // }
 
   argv[1] = "-V";
 
