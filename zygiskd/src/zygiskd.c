@@ -27,11 +27,11 @@ struct Context {
 };
 
 #define PATH_MODULES_DIR "/data/adb/modules"
-#define TMP_PATH "/data/adb/rezygisk"
+#define TMP_PATH "/data/adb/brezygisk"
 #define CONTROLLER_SOCKET TMP_PATH "/init_monitor"
 #define PATH_CP_NAME TMP_PATH "/" LP_SELECT("cp32.sock", "cp64.sock")
-#define ZYGISKD_FILE PATH_MODULES_DIR "/rezygisk/bin/zygiskd" LP_SELECT("32", "64")
-#define ZYGISKD_PATH "/data/adb/modules/rezygisk/bin/zygiskd" LP_SELECT("32", "64")
+#define ZYGISKD_FILE PATH_MODULES_DIR "/brezygisk/bin/zygiskd" LP_SELECT("32", "64")
+#define ZYGISKD_PATH "/data/adb/modules/brezygisk/bin/zygiskd" LP_SELECT("32", "64")
 
 #ifdef __aarch64__
   #define ARCH_STR "arm64-v8a"
@@ -63,7 +63,7 @@ static void load_modules(struct Context *restrict context) {
   struct dirent *entry;
   while ((entry = readdir(dir)) != NULL) {
     if (entry->d_type != DT_DIR) continue; /* INFO: Only directories */
-    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0 || strcmp(entry->d_name, "rezygisk") == 0) continue;
+    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0 || strcmp(entry->d_name, "brezygisk") == 0) continue;
 
     char *name = entry->d_name;
     char so_path[PATH_MAX];

@@ -114,7 +114,7 @@ async function getModuleNames(modules) {
   document.getElementById('kernel_version_div').innerHTML = unameCmd.stdout.trim()
   console.log('[rezygisk.js] Kernel version: ', unameCmd.stdout.trim())
 
-  const catCmd = await exec('/system/bin/cat /data/adb/modules/rezygisk/module.prop')
+  const catCmd = await exec('/system/bin/cat /data/adb/modules/brezygisk/module.prop')
   console.log(`[rezygisk.js] ReZygisk module infomation:\n${catCmd.stdout}`)
 
   if (catCmd.errno !== 0) {
@@ -140,7 +140,7 @@ async function getModuleNames(modules) {
 
   version.innerHTML = catCmd.stdout.split('\n').find((line) => line.startsWith('version=')).substring('version='.length).trim()
 
-  const stateCmd = await exec('/system/bin/cat /data/adb/rezygisk/state.json')
+  const stateCmd = await exec('/system/bin/cat /data/adb/brezygisk/state.json')
   if (stateCmd.errno !== 0) {
     console.error('[rezygisk.js] Failed to retrieve ReZygisk state information:', stateCmd.stderr)
 
