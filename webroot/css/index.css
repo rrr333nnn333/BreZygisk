@@ -96,6 +96,19 @@ a {
   z-index: 5;
 }
 
+.header2 {
+  display: flex;
+  position: fixed;
+  align-items: center;
+  justify-content: space-between;
+  left: 0;
+  right: 0;
+  padding: 20px 25px;
+  font-size: 40px;
+  border-bottom: #585b5d solid 1px;
+  z-index: 5;
+}
+
 .panel {
   display: none;
   animation: fade-out 0.2s;
