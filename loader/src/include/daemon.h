@@ -41,7 +41,7 @@ enum mount_namespace_state {
   Mounted
 };
 
-#define TMP_PATH "/data/adb/rezygisk"
+#define TMP_PATH "/data/adb/brezygisk"
 
 static inline const char *rezygiskd_get_path() {
   return TMP_PATH;
