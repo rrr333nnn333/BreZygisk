@@ -6,9 +6,9 @@ OBJ_DIR = $(BUILD_DIR)/obj/$(BUILD_TYPE)
 MODULE_OUT = $(BUILD_DIR)/module/$(BUILD_TYPE)
 ZIP_DIR = $(BUILD_DIR)/out
 
-ZKSU_VERSION = $(VER_NAME)-$(VER_CODE)-$(COMMIT_HASH)-$(BUILD_TYPE)
+ZKSU_VERSION = $(VER_NAME)-$(VER_CODE)-$(VER_CODE2)-$(COMMIT_HASH)-$(BUILD_TYPE)
 
-ZIP_NAME = $(MODULE_NAME)-$(VER_NAME)-$(VER_CODE)-$(COMMIT_HASH)-$(BUILD_TYPE).zip
+ZIP_NAME = $(MODULE_NAME)-$(VER_NAME)-$(VER_CODE)-$(VER_CODE2)-$(COMMIT_HASH)-$(BUILD_TYPE).zip
 ZIP_FILE = $(ZIP_DIR)/$(ZIP_NAME)
 
 LOADER_DONE = $(OBJ_DIR)/loader/.done
@@ -60,12 +60,12 @@ $(MODULE_DONE): $(LOADER_DONE) $(ZYGISKD_DONE) $(MODULE_INPUTS)
 
 
 	@echo "Copying module files..."
-	@cp module/src/verify.sh module/src/sepolicy.rule module/src/rezygisk.sh $(MODULE_OUT)/
+	@cp module/src/verify.sh module/src/sepolicy.rule module/src/brezygisk.sh $(MODULE_OUT)/
 
 	@echo "Customizing module.prop..."
 	@sed -e 's/$${moduleId}/$(MODULE_ID)/g'                                             \
 	    -e 's/$${moduleName}/$(MODULE_NAME)/g'                                          \
-	    -e 's/$${versionName}/$(VER_NAME) ($(VER_CODE)-$(COMMIT_HASH)-$(BUILD_TYPE))/g' \
+	    -e 's/$${versionName}/$(VER_NAME) ($(VER_CODE)-$(VER_CODE2)-$(COMMIT_HASH)-$(BUILD_TYPE))/g' \
 	    -e 's/$${versionCode}/$(VER_CODE)/g'                                            \
 	    module/src/module.prop > $(MODULE_OUT)/module.prop
 
