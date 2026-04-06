@@ -1,6 +1,15 @@
 # Hot Install Support
 export MODULE_HOT_INSTALL_REQUEST="true"
 
+# Disable Other Zygisk
+modules="
+zygisksu
+"
+for i in ${modules}; do
+	[[ -e "/data/adb/modules/${i}" ]] && touch "/data/adb/modules/${i}/disable"
+done
+[[ -e "/data/adb/modules/brezygisk" ]] && touch "/data/adb/modules/brezygisk/remove"
+
 # shellcheck disable=SC2034
 SKIPUNZIP=1
 
