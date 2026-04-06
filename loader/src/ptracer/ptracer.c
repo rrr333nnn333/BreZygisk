@@ -510,7 +510,7 @@ bool trace_zygote(int pid, bool tango_flag) {
         return false;
       }
 
-      const char *lib_path = "/data/adb/modules/rezygisk/lib/libzygisk.so";
+      const char *lib_path = "/data/adb/modules/brezygisk/lib/libzygisk.so";
       bool result = inject_tango(pid, lib_path, watch.libc_init_resolved, watch.libc_init_got_slot);
       if (!result) LOGE("Failed to inject tango");
 
@@ -521,7 +521,7 @@ bool trace_zygote(int pid, bool tango_flag) {
   #endif /* __aarch64__ */
 
   if (STOPPED_WITH(SIGSTOP, PTRACE_EVENT_STOP)) {
-    char *lib_path = "/data/adb/modules/rezygisk/lib" LP_SELECT("", "64") "/libzygisk.so";
+    char *lib_path = "/data/adb/modules/brezygisk/lib" LP_SELECT("", "64") "/libzygisk.so";
     if (!inject_on_main(pid, lib_path)) {
       LOGE("failed to inject");
 

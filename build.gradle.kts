@@ -17,11 +17,13 @@ fun String.execute(currentWorkingDir: File = file("./")): String {
 
 val gitCommitCount = "git rev-list HEAD --count".execute().toInt()
 val gitCommitHash = "git rev-parse --verify --short HEAD".execute()
+val gitCommitsAhead = "git rev-list upstream/main..HEAD --count".execute().toInt()
 
-val moduleId by extra("rezygisk")
-val moduleName by extra("ReZygisk")
+val moduleId by extra("brezygisk")
+val moduleName by extra("BreZygisk")
 val verName by extra("v1.0.0")
-val verCode by extra(gitCommitCount)
+val verCode by extra(gitCommitCount - gitCommitsAhead)
+val verCode2 by extra(gitCommitsAhead)
 val commitHash by extra(gitCommitHash)
 val minAPatchVersion by extra(10655)
 val minKsuVersion by extra(10940)

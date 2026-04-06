@@ -23,6 +23,7 @@ plugins {
 val moduleId: String by rootProject.extra
 val moduleName: String by rootProject.extra
 val verCode: Int by rootProject.extra
+val verCode2: Int by rootProject.extra
 val verName: String by rootProject.extra
 val minAPatchVersion: Int by rootProject.extra
 val minKsuVersion: Int by rootProject.extra
@@ -42,7 +43,7 @@ androidComponents.onVariants { variant ->
     val buildTypeLowered = variant.buildType?.lowercase()
 
     val moduleDir = layout.buildDirectory.dir("outputs/module/$variantLowered")
-    val zipFileName = "$moduleName-$verName-$verCode-$commitHash-$buildTypeLowered.zip".replace(' ', '-')
+    val zipFileName = "$moduleName-$verName-$verCode-$verCode2-$commitHash-$buildTypeLowered.zip".replace(' ', '-')
 
     val prepareModuleFilesTask = task<Sync>("prepareModuleFiles$variantCapped") {
         group = "module"
@@ -61,7 +62,7 @@ androidComponents.onVariants { variant ->
             expand(
                 "moduleId" to moduleId,
                 "moduleName" to moduleName,
-                "versionName" to "$verName ($verCode-$commitHash-$variantLowered)",
+                "versionName" to "$verName ($verCode-$verCode2-$commitHash-$variantLowered)",
                 "versionCode" to verCode
             )
         }

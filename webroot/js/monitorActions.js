@@ -18,13 +18,13 @@ const monitor_status = document.getElementById('monitor_status');
 
       monitor_status.innerHTML = translations.page.actions.status.tracing
 
-      exec('/data/adb/modules/rezygisk/bin/zygisk-ptrace64 ctl start')
+      exec('/data/adb/modules/brezygisk/bin/zygisk-ptrace64 ctl start')
     })
 
     monitor_stop.addEventListener('click', () => {
       monitor_status.innerHTML = translations.page.actions.status.exiting
 
-      exec('/data/adb/modules/rezygisk/bin/zygisk-ptrace64 ctl exit')
+      exec('/data/adb/modules/brezygisk/bin/zygisk-ptrace64 ctl exit')
     })
 
     monitor_pause.addEventListener('click', () => {
@@ -32,7 +32,7 @@ const monitor_status = document.getElementById('monitor_status');
 
       monitor_status.innerHTML = translations.page.actions.status.stopped
 
-      exec('/data/adb/modules/rezygisk/bin/zygisk-ptrace64 ctl stop')
+      exec('/data/adb/modules/brezygisk/bin/zygisk-ptrace64 ctl stop')
     })
   }
 })()

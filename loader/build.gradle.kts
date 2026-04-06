@@ -6,6 +6,7 @@ plugins {
 }
 
 val verCode: Int by rootProject.extra
+val verCode2: Int by rootProject.extra
 val verName: String by rootProject.extra
 val commitHash: String by rootProject.extra
 
@@ -64,14 +65,14 @@ android {
     buildTypes {
         debug {
             externalNativeBuild.cmake {
-                arguments += "-DZKSU_VERSION=$verName-$verCode-$commitHash-debug"
+                arguments += "-DZKSU_VERSION=$verName-$verCode-$verCode2-$commitHash-debug"
             }
         }
         release {
             externalNativeBuild.cmake {
                 cFlags += releaseFlags
                 cppFlags += releaseFlags
-                arguments += "-DZKSU_VERSION=$verName-$verCode-$commitHash-release"
+                arguments += "-DZKSU_VERSION=$verName-$verCode-$verCode2-$commitHash-release"
             }
         }
     }

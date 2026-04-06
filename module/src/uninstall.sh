@@ -1,6 +1,6 @@
 #!/system/bin/sh
 
-export TMP_PATH=/data/adb/rezygisk
+export TMP_PATH=/data/adb/brezygisk
 rm -rf $TMP_PATH
 
 rm -f /data/adb/post-fs-data.d/rezygisk.sh

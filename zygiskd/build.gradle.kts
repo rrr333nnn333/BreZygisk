@@ -23,6 +23,7 @@ val minKsuVersion: Int by rootProject.extra
 val maxKsuVersion: Int by rootProject.extra
 val minMagiskVersion: Int by rootProject.extra
 val verCode: Int by rootProject.extra
+val verCode2: Int by rootProject.extra
 val verName: String by rootProject.extra
 val commitHash: String by rootProject.extra
 

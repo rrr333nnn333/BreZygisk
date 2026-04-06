@@ -827,7 +827,7 @@ static char post_section[1024];
   }
 
 static bool update_status(const char *message) {
-  FILE *prop = fopen("/data/adb/modules/rezygisk/module.prop", "w");
+  FILE *prop = fopen("/data/adb/modules/brezygisk/module.prop", "w");
   if (prop == NULL) {
     PLOGE("failed to open prop");
 
@@ -868,7 +868,7 @@ static bool update_status(const char *message) {
   fclose(prop);
 
   if (environment_information64.root_impl || environment_information32.root_impl) {
-    FILE *json = fopen("/data/adb/rezygisk/state.json", "w");
+    FILE *json = fopen("/data/adb/brezygisk/state.json", "w");
     if (json == NULL) {
       PLOGE("failed to open state.json");
 
@@ -941,7 +941,7 @@ static bool update_status(const char *message) {
 
     fclose(json);
   } else {
-    if (remove("/data/adb/rezygisk/state.json") == -1) {
+    if (remove("/data/adb/brezygisk/state.json") == -1) {
       PLOGE("failed to remove state.json");
     }
   }
@@ -952,7 +952,7 @@ static bool update_status(const char *message) {
 }
 
 static bool prepare_environment() {
-  FILE *orig_prop = fopen("/data/adb/modules/rezygisk/module.prop", "r");
+  FILE *orig_prop = fopen("/data/adb/modules/brezygisk/module.prop", "r");
   if (orig_prop == NULL) {
     PLOGE("failed to open orig prop");
 
