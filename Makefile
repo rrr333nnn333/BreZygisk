@@ -27,8 +27,8 @@ MODULE_INPUTS = scripts/sign.py \
         $(wildcard module/private_key module/public_key)
 
 .PHONY: debug release build clean                                         \
-        installKsu installAPatch                                          \
-        installKsuAndReboot installAPatchAndReboot
+        installKsu                                                        \
+        installKsuAndReboot
 
 debug:
 	$(MAKE) BUILD_TYPE=debug BUILD_DIR=$(BUILD_DIR) build
@@ -66,7 +66,6 @@ $(MODULE_DONE): $(LOADER_DONE) $(ZYGISKD_DONE) $(MODULE_INPUTS)
 	@echo "Customizing scripts..."
 	@for script in customize.sh post-fs-data.sh service.sh uninstall.sh; do \
 		sed -e 's/@DEBUG@/$(if $(filter debug,$(BUILD_TYPE)),true,false)/g' \
-		    -e 's/@MIN_APATCH_VERSION@/$(MIN_APATCH_VERSION)/g'             \
 		    -e 's/@MIN_KSU_VERSION@/$(MIN_KSU_VERSION)/g'                   \
 		    -e 's/@MIN_KSUD_VERSION@/$(MIN_KSUD_VERSION)/g'                 \
 		    module/src/$$script > $(MODULE_OUT)/$$script;                   \
@@ -105,14 +104,7 @@ installKsu: build
 	adb push $(ZIP_FILE) /data/local/tmp/
 	adb shell su -c '/data/adb/ksu/bin/ksud module install /data/local/tmp/$(ZIP_NAME)'
 
-installAPatch: build
-	adb push $(ZIP_FILE) /data/local/tmp/
-	adb shell su -c "/data/adb/apd module install /data/local/tmp/$(ZIP_NAME)"
-
 installKsuAndReboot: installKsu
-	adb reboot
-
-installAPatchAndReboot: installAPatch
 	adb reboot
 
 clean:

@@ -16,7 +16,6 @@ enum rezygiskd_flags : uint32_t {
   PROCESS_ON_DENYLIST = (1u << 1),
 
   PROCESS_IS_MANAGER = (1u << 27),
-  PROCESS_ROOT_IS_APATCH = (1u << 28),
   PROCESS_ROOT_IS_KSU = (1u << 29),
   PROCESS_IS_FIRST_STARTED = (1u << 31),
 

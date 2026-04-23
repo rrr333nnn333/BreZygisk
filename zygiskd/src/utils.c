@@ -459,11 +459,6 @@ void stringify_root_impl_name(struct root_impl impl, char *restrict output) {
 
       break;
     }
-    case APatch: {
-      strcpy(output, "APatch");
-
-      break;
-    }
   }
 }
 
@@ -648,7 +643,7 @@ bool parse_mountinfo(const char *restrict pid, struct mountinfos *restrict mount
   return true;
 }
 
-bool umount_root(struct root_impl impl) {
+bool umount_root(void) {
   if (access("/data/adb/modules/brezygisk/disable_unmount", F_OK) == 0) {
 		return false;
   }
@@ -664,7 +659,6 @@ bool umount_root(struct root_impl impl) {
   }
 
   const char *source_name = "KSU";
-  if (impl.impl == APatch) source_name = "APatch";
 
   LOGI("[%s] Unmounting root", source_name);
 
@@ -716,7 +710,7 @@ bool umount_root(struct root_impl impl) {
   return true;
 }
 
-int save_mns_fd(int pid, enum MountNamespaceState mns_state, struct root_impl impl) {
+int save_mns_fd(int pid, enum MountNamespaceState mns_state) {
   static int clean_namespace_fd = -1;
   static int mounted_namespace_fd = -1;
 
@@ -758,7 +752,7 @@ int save_mns_fd(int pid, enum MountNamespaceState mns_state, struct root_impl im
     if (mns_state == Clean) {
       unshare(CLONE_NEWNS);
 
-      if (!umount_root(impl)) {
+      if (!umount_root()) {
         LOGE("Failed to umount root");
 
         if (write_uint8_t(socket_child, 0) == -1)
