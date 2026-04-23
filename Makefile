@@ -36,8 +36,8 @@ MODULE_INPUTS = scripts/sign.py \
         $(wildcard module/private_key module/public_key)
 
 .PHONY: debug release build clean                                         \
-        installKsu installMagisk installAPatch                            \
-        installKsuAndReboot installMagiskAndReboot installAPatchAndReboot
+        installKsu installAPatch                                          \
+        installKsuAndReboot installAPatchAndReboot
 
 debug:
 	$(MAKE) BUILD_TYPE=debug BUILD_DIR=$(BUILD_DIR) build
@@ -62,13 +62,7 @@ $(ZYGISKD_DONE): $(ZYGISKD_INPUTS)
 $(MODULE_DONE): $(LOADER_DONE) $(ZYGISKD_DONE) $(MODULE_INPUTS)
 
 	@rm -rf $(MODULE_OUT)
-	@mkdir -p $(MODULE_OUT)/META-INF/com/google/android
-
-	@echo "Copying META-INF files..."
-	@cp module/src/META-INF/com/google/android/update-binary  \
-	   module/src/META-INF/com/google/android/updater-script \
-	   $(MODULE_OUT)/META-INF/com/google/android/
-
+	@mkdir -p $(MODULE_OUT)
 
 	@echo "Copying module files..."
 	@cp module/src/verify.sh module/src/sepolicy.rule module/src/brezygisk.sh $(MODULE_OUT)/
@@ -86,7 +80,6 @@ $(MODULE_DONE): $(LOADER_DONE) $(ZYGISKD_DONE) $(MODULE_INPUTS)
 		    -e 's/@MIN_APATCH_VERSION@/$(MIN_APATCH_VERSION)/g'             \
 		    -e 's/@MIN_KSU_VERSION@/$(MIN_KSU_VERSION)/g'                   \
 		    -e 's/@MIN_KSUD_VERSION@/$(MIN_KSUD_VERSION)/g'                 \
-		    -e 's/@MIN_MAGISK_VERSION@/$(MIN_MAGISK_VERSION)/g'             \
 		    module/src/$$script > $(MODULE_OUT)/$$script;                   \
 	done
 
@@ -122,16 +115,10 @@ $(ZIP_FILE): $(MODULE_DONE)
 installKsu: build
 	$(ADB_CMD)su -c '/data/adb/ksu/bin/ksud module install $(INSTALL_PATH)'
 
-installMagisk: build
-	$(ADB_CMD)su -M -c "magisk --install-module $(INSTALL_PATH)"
-
 installAPatch: build
 	$(ADB_CMD)su -c "/data/adb/apd module install $(INSTALL_PATH)"
 
 installKsuAndReboot: installKsu
-	$(REBOOT_CMD)
-
-installMagiskAndReboot: installMagisk
 	$(REBOOT_CMD)
 
 installAPatchAndReboot: installAPatch
