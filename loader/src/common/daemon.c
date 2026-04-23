@@ -129,8 +129,6 @@ void rezygiskd_get_info(struct rezygisk_info *info) {
 
   if (flags & (1 << 28)) info->root_impl = ROOT_IMPL_APATCH;
   else if (flags & (1 << 29)) info->root_impl = ROOT_IMPL_KERNELSU;
-  else if (flags & (1 << 30)) info->root_impl = ROOT_IMPL_MAGISK;
-  else info->root_impl = ROOT_IMPL_NONE;
 
   safe_read(read_uint32_t(fd, (uint32_t *)&info->pid), "pid", return);
 

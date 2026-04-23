@@ -19,7 +19,6 @@
 
 #include "root_impl/common.h"
 #include "root_impl/kernelsu.h"
-#include "root_impl/magisk.h"
 
 #include "utils.h"
 
@@ -454,16 +453,6 @@ int non_blocking_execv(const char *restrict file, char *const argv[]) {
 
 void stringify_root_impl_name(struct root_impl impl, char *restrict output) {
   switch (impl.impl) {
-    case None: {
-      strcpy(output, "None");
-
-      break;
-    }
-    case Multiple: {
-      strcpy(output, "Multiple");
-
-      break;
-    }
     case KernelSU: {
       if (impl.variant == KOfficial) strcpy(output, "KernelSU");
       // else strcpy(output, "KernelSU Next");
@@ -472,12 +461,6 @@ void stringify_root_impl_name(struct root_impl impl, char *restrict output) {
     }
     case APatch: {
       strcpy(output, "APatch");
-
-      break;
-    }
-    case Magisk: {
-      if (impl.variant == MOfficial) strcpy(output, "Magisk Official");
-      else strcpy(output, "Magisk Kitsune");
 
       break;
     }
@@ -680,9 +663,8 @@ bool umount_root(struct root_impl impl) {
     return false;
   }
 
-  const char *source_name = "magisk";
-  if (impl.impl == KernelSU) source_name = "KSU";
-  else if (impl.impl == APatch) source_name = "APatch";
+  const char *source_name = "KSU";
+  if (impl.impl == APatch) source_name = "APatch";
 
   LOGI("[%s] Unmounting root", source_name);
 
@@ -693,7 +675,7 @@ bool umount_root(struct root_impl impl) {
     struct mountinfo mount = mounts.mounts[i];
 
     bool should_unmount = false;
-    if (strcmp(mount.source, source_name) == 0 || (impl.impl == Magisk && strcmp(mount.source, "worker") == 0)) should_unmount = true;
+    if (strcmp(mount.source, source_name) == 0) should_unmount = true;
     if (strncmp(mount.target, "/data/adb/modules", strlen("/data/adb/modules")) == 0) should_unmount = true;
     if (strncmp(mount.root, "/adb/modules/", strlen("/adb/modules/")) == 0) should_unmount = true;
 
@@ -857,42 +839,6 @@ int save_mns_fd(int pid, enum MountNamespaceState mns_state, struct root_impl im
     LOGE("waitpid: %s", strerror(errno));
 
     return -1;
-  }
-
-  if (impl.impl == Magisk && impl.variant == MKitsune && mns_state == Clean) {
-    LOGI("[Magisk] Magisk Kitsune detected, will skip cache first.");
-
-    /* INFO: MagiskSU of Kitsune has a special behavior: It is only mounted
-               once system boots, because of that, we can only cache once
-               that happens, or else it will clean the mounts, then later
-               get MagiskSU mounted, resulting in a mount leak.
-
-       SOURCES:
-        - https://github.com/1q23lyc45/KitsuneMagisk/blob/8562a0b2ad142d21566c1ea41690ad64108ca14c/native/src/core/bootstages.cpp#L359
-    */
-    char boot_completed[2];
-    get_property("sys.boot_completed", boot_completed);
-
-    if (boot_completed[0] == '1') {
-      LOGI("[Magisk] Appropriate mns found, caching clean namespace fd.");
-
-      clean_namespace_fd = ns_fd;
-    }
-
-    /* BUG: For the case where it hasn't booted yet, we will need to
-              keep creating mns that will be left behind, the issue is:
-              they are not close'd. This is a problem, because we will
-              have a leak of fds, although only from the period of booting.
-
-            When trying to close the ns_fd from the libzygisk.so, fdsan
-              will complain as it is owned by RandomAccessFile, and if
-              we close from ReZygiskd, system will refuse to boot for
-              some reason, even if we wait for setns in libzygisk.so,
-              and that issue is related to setns, as it only happens
-              with it.
-    */
-
-    return ns_fd;
   }
 
   if (mns_state == Clean) clean_namespace_fd = ns_fd;
