@@ -12,7 +12,6 @@ COMMIT_HASH ?= $(shell git -C "$(ROOT_DIR)" rev-parse --verify --short HEAD 2>/d
 MIN_APATCH_VERSION ?= 10655
 MIN_KSU_VERSION ?= 10940
 MIN_KSUD_VERSION ?= 11425
-MIN_MAGISK_VERSION ?= 26402
 
 MODULE_ID ?= brezygisk
 MODULE_NAME ?= BreZygisk

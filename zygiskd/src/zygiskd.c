@@ -266,21 +266,7 @@ void zygiskd_start(char *restrict argv[]) {
 
   struct root_impl impl;
   get_impl(&impl);
-  if (impl.impl == None || impl.impl == Multiple) {
-    unix_datagram_sendto(CONTROLLER_SOCKET, &(uint8_t){ DAEMON_SET_ERROR_INFO }, sizeof(uint8_t));
-
-    const char *msg = NULL;
-    if (impl.impl == None) msg = "Unsupported environment: Unknown root implementation";
-    else msg = "Unsupported environment: Multiple root implementations found";
-
-    LOGE("%s", msg);
-
-    uint32_t msg_len = (uint32_t)strlen(msg);
-    unix_datagram_sendto(CONTROLLER_SOCKET, &msg_len, sizeof(msg_len));
-    unix_datagram_sendto(CONTROLLER_SOCKET, msg, msg_len);
-
-    exit(EXIT_FAILURE);
-  } else {
+  if (true) {
     load_modules(&context);
 
     unix_datagram_sendto(CONTROLLER_SOCKET, &(uint8_t){ DAEMON_SET_INFO }, sizeof(uint8_t));
@@ -394,8 +380,6 @@ void zygiskd_start(char *restrict argv[]) {
         }
 
         switch (impl.impl) {
-          case None: { break; }
-          case Multiple: { break; }
           case KernelSU: {
             flags |= PROCESS_ROOT_IS_KSU;
 
@@ -403,11 +387,6 @@ void zygiskd_start(char *restrict argv[]) {
           }
           case APatch: {
             flags |= PROCESS_ROOT_IS_APATCH;
-
-            break;
-          }
-          case Magisk: {
-            flags |= PROCESS_ROOT_IS_MAGISK;
 
             break;
           }
@@ -422,8 +401,6 @@ void zygiskd_start(char *restrict argv[]) {
         uint32_t flags = 0;
 
         switch (impl.impl) {
-          case None: { break; }
-          case Multiple: { break; }
           case KernelSU: {
             flags |= PROCESS_ROOT_IS_KSU;
 
@@ -431,11 +408,6 @@ void zygiskd_start(char *restrict argv[]) {
           }
           case APatch: {
             flags |= PROCESS_ROOT_IS_APATCH;
-
-            break;
-          }
-          case Magisk: {
-            flags |= PROCESS_ROOT_IS_MAGISK;
 
             break;
           }
