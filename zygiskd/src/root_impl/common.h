@@ -8,11 +8,8 @@
 #include "../constants.h"
 
 enum root_impls {
-  None,
-  Multiple,
   KernelSU,
-  APatch,
-  Magisk
+  APatch
 };
 
 struct root_impl_state {
@@ -25,7 +22,7 @@ struct root_impl {
   uint8_t variant;
 };
 
-#define LONGEST_ROOT_IMPL_NAME sizeof("Magisk Official")
+#define LONGEST_ROOT_IMPL_NAME sizeof("KernelSU")
 
 void root_impls_setup(void);
 

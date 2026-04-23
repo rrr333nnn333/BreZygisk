@@ -2,7 +2,6 @@ type zygisk_file file_type
 typeattribute zygisk_file mlstrustedobject
 allow zygote zygisk_file sock_file {read write}
 
-allow zygote magisk lnk_file read
 allow zygote unlabeled file {read open}
 allow zygote zygote capability sys_chroot
 
