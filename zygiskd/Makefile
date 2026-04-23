@@ -20,11 +20,10 @@ ZYGISKD_CFLAGS = -D_GNU_SOURCE -std=c99 -Wpedantic -Wall -Wextra -Werror  \
 			 	 -Wformat -Wuninitialized -Wshadow -Wno-zero-length-array \
 			 	 -Wno-fixed-enum-extension -Wno-unknown-warning-option    \
 				 -Wno-c23-extensions -Wconversion                         \
-				 -DMIN_APATCH_VERSION=$(MIN_APATCH_VERSION)               \
 				 -DMIN_KSU_VERSION=$(MIN_KSU_VERSION)                     \
 				 '-DZKSU_VERSION="$(ZKSU_VERSION)"'
 
-SRCS = src/root_impl/apatch.c src/root_impl/common.c        \
+SRCS = src/root_impl/common.c        \
 	   src/root_impl/kernelsu.c                               \
 	   src/companion.c src/main.c src/utils.c src/zygiskd.c
 

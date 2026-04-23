@@ -16,7 +16,6 @@ SKIPUNZIP=1
 DEBUG=@DEBUG@
 MIN_KSU_VERSION=@MIN_KSU_VERSION@
 MIN_KSUD_VERSION=@MIN_KSUD_VERSION@
-MIN_APATCH_VERSION=@MIN_APATCH_VERSION@
 
 if [ "$BOOTMODE" ] && [ "$KSU" ]; then
   ui_print "- Installing from KernelSU app"
@@ -33,14 +32,6 @@ if [ "$BOOTMODE" ] && [ "$KSU" ]; then
     ui_print "! Please update KernelSU Manager to latest version"
     abort    "*********************************************************"
   fi
-  elif [ "$BOOTMODE" ] && [ "$APATCH" ]; then
-    ui_print "- Installing from APatch app"
-    if ! [ "$APATCH_VER_CODE" ] || [ "$APATCH_VER_CODE" -lt "$MIN_APATCH_VERSION" ]; then
-      ui_print "*********************************************************"
-      ui_print "! APatch version is too old!"
-      ui_print "! Please update APatch to latest version"
-      abort    "*********************************************************"
-    fi
 else
   ui_print "*********************************************************"
   ui_print "! Install from recovery is not supported"
