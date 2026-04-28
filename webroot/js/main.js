@@ -1,4 +1,4 @@
-import { fullScreen, exec, toast } from './kernelsu.js'
+import { exec, toast } from './kernelsu.js'
 
 import { setNewLanguage, getTranslations } from './language.js'
 
@@ -70,7 +70,7 @@ async function getModuleNames(modules) {
       console.error(err)
     })
 
-  fullScreen(true)
+  // fullScreen(true)
 
   let sys_lang = localStorage.getItem('/ReZygisk/language')
 
@@ -213,7 +213,7 @@ async function getModuleNames(modules) {
   } else if (expectedWorking === actuallyWorking) {
     rezygisk_state.innerHTML = translations.page.home.status.ok
 
-    rootCss.style.setProperty('--status-bar', '#545454')
+    rootCss.style.setProperty('--status-bar', '#409905')
     rezygisk_icon_state.innerHTML = '<img class="brightc" src="assets/tick.svg">'
   } else {
     rezygisk_state.innerHTML = translations.page.home.status.partially

@@ -27,7 +27,7 @@
       "header": "Home",
       "status": {
         "notWorking": "Not Working",
-        "ok": "Working",
+        "ok": "Working and Hiding",
         "partially": "Partially Working"
       },
       "info": {

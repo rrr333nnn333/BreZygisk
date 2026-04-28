@@ -108,9 +108,9 @@ function Stdio() {
     return child;
   }
 
-export function fullScreen(isFullScreen) {
-  ksu.fullScreen(isFullScreen);
-}
+// export function fullScreen(isFullScreen) {
+//   ksu.fullScreen(isFullScreen);
+// }
 
 export function toast(message) {
   ksu.toast(message);

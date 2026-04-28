@@ -23,7 +23,7 @@ const setData = (mode) => {
 
 // INFO: Initial open logic
 sys_theme = localStorage.getItem('/ReZygisk/theme')
-if (!sys_theme) sys_theme = setData('dark')
+if (!sys_theme) sys_theme = setData('amoled')
 themeList[sys_theme](true)
 
 // INFO: Event logic
