@@ -4,7 +4,7 @@
   border-radius: 50%;
   width: 3em;
   height: 3em;
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.1s linear infinite;
 }
 
 #loading_screen {
@@ -69,21 +69,21 @@
   align-items: center;
   justify-content: center;
   border-radius: 50px;
-  animation: closeNav 0.15s;
+  animation: closeNav 0.1s;
 }
 
 .navicon.show {
   width: 65px;
-  animation: openNav 0.15s;
+  animation: openNav 0.1s;
 }
 
-@media ((min-width: 850px) and (orientation: landscape)), (max-width: 350px) {
+@media (min-width: 0px) {
   #navbar {
     background-color: var(--desktop-navbar);
-    transform: scale(0.85);
+    transform: scale(1.4);
     left: auto;
     right: auto;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
     border-radius: 60px;
     padding: 10px 10px;
   }
@@ -105,10 +105,10 @@
   .navicon {
     background: var(--desktop-navicon);
     height: 65px;
-    animation: closeNavDesktop 0.15s;
+    animation: closeNavDesktop 0.1s;
   }
   .navicon.show {
-    animation: openNavDesktop 0.15s;
+    animation: openNavDesktop 0.1s;
   }
   .nav_dimc {
     background: var(--desktop-navbar);

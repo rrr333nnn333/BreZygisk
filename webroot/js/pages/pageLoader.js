@@ -528,7 +528,7 @@ export async function loadMiniPage(miniPageId, unloadCb) {
   const navbar = document.getElementById('navbar')
   const navbar_support_div = document.getElementById('navbar_support_div')
 
-  page_content.style.transition = navbar.style.transition = 'filter 0.3s'
+  page_content.style.transition = navbar.style.transition = 'filter 0.1s'
   page_content.style.filter = navbar.style.filter = 'blur(10px)'
   /* INFO: Not allow it to interact with the page, just click to close */
   page_content.style.pointerEvents = navbar_support_div.style.pointerEvents = 'none'
@@ -539,9 +539,9 @@ export async function loadMiniPage(miniPageId, unloadCb) {
     if (isClick) history.back()
 
     const minipage_content = document.getElementById('minipage_content')
-    minipage_content.style.animation = 'fade-out 0.2s'
+    minipage_content.style.animation = 'fade-out 0.1s'
 
-    page_content.style.transition = navbar.style.transition = 'filter 0.2s'
+    page_content.style.transition = navbar.style.transition = 'filter 0.1s'
     page_content.style.filter = navbar.style.filter = null
     page_content.style.pointerEvents = navbar_support_div.style.pointerEvents = null
 
@@ -568,7 +568,7 @@ export async function loadMiniPage(miniPageId, unloadCb) {
     transform: translate(-50%, -50%);
     z-index: 1;
     background: none;
-    animation: fade-in 0.3s;
+    animation: fade-in 0.1s;
   `
 
   minipage_content.innerHTML = `
