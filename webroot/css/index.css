@@ -1,4 +1,9 @@
+@import url('https://mui.kernelsu.org/internal/insets.css');
+
 :root {
+	--top-inset: var(--window-inset-top, 0px);
+	--bottom-inset: var(--window-inset-bottom, 0px);
+
   --background: #141414;
   --font: #fff;
   --desc: #c9c9c9;
@@ -27,11 +32,9 @@
 
 body {
   margin: 0;
+	padding-top: var(--top-inset);
+	padding-bottom: calc(var(--bottom-inset) + 32px);
   overscroll-behavior: none;
-
-  /* INFO: WebUI X insets */
-  padding-top: var(--window-inset-top);
-  padding-bottom: var(--window-inset-bottom);
 }
 
 a {
@@ -52,7 +55,7 @@ a {
 
 .panel {
   display: block;
-  animation: fade-in 0.2s;
+  animation: fade-in 0.1s;
   margin-bottom: 120px;
 }
 
@@ -189,7 +192,7 @@ body {
 }
 
 .page_loader_main_push {
-  animation: pageLoaderMainPush 400ms cubic-bezier(0.2, 0, 0, 1) both;
+  animation: pageLoaderMainPush 100ms cubic-bezier(0.2, 0, 0, 1) both;
 }
 
 .page_loader_mini_layer {
@@ -203,11 +206,11 @@ body {
 }
 
 .page_loader_mini_in {
-  animation: pageLoaderMiniIn 240ms cubic-bezier(0.2, 1, 0.3, 1);
+  animation: pageLoaderMiniIn 100ms cubic-bezier(0.2, 1, 0.3, 1);
 }
 
 .page_loader_mini_out {
-  animation: pageLoaderMiniOut 220ms cubic-bezier(0.4, 0, 1, 1);
+  animation: pageLoaderMiniOut 100ms cubic-bezier(0.4, 0, 1, 1);
 }
 
 @keyframes pageLoaderMainPush {
