@@ -3,6 +3,5 @@ name=${moduleName}
 version=${versionName}
 versionCode=${versionCode}
 author=rrr333nnn333 & The PerformanC Organization
-description=Standalone implementation of Zygisk.
-updateJson=https://raw.githubusercontent.com/ThePedroo/RemoteFiles/refs/heads/main/ReZygisk/update.json
+description=A ReZygisk Fork - Transparent implementation of Zygisk.
 managedFeatures=kernel_umount
