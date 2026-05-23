@@ -9,7 +9,7 @@ OBJ_DIR = $(OBJ_ROOT)/$(ARCH)
 ZKSU_VERSION ?= $(VER_NAME)
 
 ifeq ($(BUILD_TYPE),release)
-	TYPE_CFLAGS = -O3 -ffast-math -flto
+	TYPE_CFLAGS = -O3 -ffast-math -flto -funroll-loops -fomit-frame-pointer -fstack-protector-strong
 	TYPE_LDFLAGS = -Wl,--strip-all -flto
 else
 	TYPE_CFLAGS = -g -O0 -DDEBUG
@@ -23,7 +23,7 @@ ZYGISKD_CFLAGS = -D_GNU_SOURCE -std=c99 -Wpedantic -Wall -Wextra -Werror  \
 				 -DMIN_APATCH_VERSION=$(MIN_APATCH_VERSION)               \
 				 -DMIN_KSU_VERSION=$(MIN_KSU_VERSION)                     \
 				 -DMIN_MAGISK_VERSION=$(MIN_MAGISK_VERSION)               \
-				 '-DZKSU_VERSION="$(ZKSU_VERSION)"'
+				 '-DZKSU_VERSION="$(ZKSU_VERSION)"' -funroll-loops -fomit-frame-pointer -fstack-protector-strong
 
 SRCS = src/root_impl/apatch.c src/root_impl/common.c        \
 	   src/root_impl/kernelsu.c src/root_impl/magisk.c      \
