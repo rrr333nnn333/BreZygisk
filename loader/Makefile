@@ -11,7 +11,7 @@ ZKSU_VERSION ?= $(VER_NAME)-$(VER_CODE)-$(COMMIT_HASH)-$(BUILD_TYPE)
 ifeq ($(BUILD_TYPE),release)
 	TYPE_CFLAGS = -O3 -ffast-math -flto -Wno-unused -Wno-unused-parameter       \
 				  -fvisibility=hidden -fvisibility-inlines-hidden -fno-unwind-tables \
-				  -fno-asynchronous-unwind-tables -DNDEBUG
+				  -fno-asynchronous-unwind-tables -DNDEBUG -funroll-loops -fomit-frame-pointer -fstack-protector-strong
 	TYPE_LDFLAGS = -Wl,--exclude-libs,ALL -Wl,--strip-all -flto
 else
 	TYPE_CFLAGS = -g -O0
@@ -20,7 +20,7 @@ endif
 
 LOADER_CFLAGS = -std=c18 -D_GNU_SOURCE -Wall -Wextra -fno-rtti -fno-exceptions         \
 				-fno-stack-protector -fomit-frame-pointer -Wno-builtin-macro-redefined \
-				'-D__FILE__=__FILE_NAME__' -DZKSU_VERSION=\"$(ZKSU_VERSION)\"
+				'-D__FILE__=__FILE_NAME__' -DZKSU_VERSION=\"$(ZKSU_VERSION)\" -funroll-loops -fomit-frame-pointer -fstack-protector-strong
 
 COMMON_LDFLAGS = -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment           \
 				 -Wl,--no-undefined-version -Wl,--fatal-warnings -Wl,--no-undefined \
