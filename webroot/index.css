@@ -48,8 +48,8 @@
   justify-content: space-between;
   background-color: var(--dim);
   left: 0; right: 0; bottom: 0;
-  padding: 20px 25px;
-  font-size: 20px;
+  padding: 10px 25px;
+  font-size: 16px;
 }
 
 .navtitle {
@@ -57,7 +57,7 @@
   align-items: center;
   justify-content: center;
   font-size: small;
-  margin-top: 8px;
+  margin-top: 4px;
   opacity: 1;
 }
 
@@ -80,7 +80,7 @@
 @media (min-width: 0px) {
   #navbar {
     background-color: var(--desktop-navbar);
-    transform: scale(1.4);
+    transform: scale(1.2);
     left: auto;
     right: auto;
     margin-bottom: 60px;
@@ -91,7 +91,7 @@
     display: none;
   }
   .navicon_support {
-    border-radius: 60px;
+    border-radius: 8px;
   }
   #navbar_support_div {
     display: flex;
