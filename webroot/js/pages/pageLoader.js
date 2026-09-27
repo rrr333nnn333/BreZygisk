@@ -657,3 +657,31 @@ window.addEventListener('popstate', async () => {
 
   await loadPage('home')
 })
+
+const setIntervalId = setInterval(() => {
+	const toggle = document.getElementById('umount_toggle')
+
+	if (toggle) {
+		clearInterval(setIntervalId)
+
+		exec("[[ -e '/data/adb/brezygisk/unmount' ]] && echo '1' || echo '0'").then(result => {
+			if (result.errno === 0) {
+				Boolean(Number(result.stdout)) ? (toggle.checked = true) : (toggle.checked = false)
+			}
+		})
+
+		document.addEventListener('change', async event => {
+			if (event.target && event.target.matches('#umount_toggle')) {
+				const toggle = document.getElementById('umount_toggle')
+				const enabled = !toggle.checked
+
+				if (enabled) {
+					exec('rm -f /data/adb/brezygisk/unmount')
+				} else {
+					exec('mkdir -p /data/adb/brezygisk')
+					exec('touch /data/adb/brezygisk/unmount')
+				}
+			}
+		})
+	}
+}, 1000)

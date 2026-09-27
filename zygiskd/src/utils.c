@@ -772,17 +772,19 @@ int save_mns_fd(int pid, enum MountNamespaceState mns_state, struct root_impl im
       goto finalize_mns_fork;
     }
 
-    if (mns_state == Clean) {
-      unshare(CLONE_NEWNS);
+    if (access("/data/adb/brezygisk/unmount", F_OK) == 0) {
+			if (mns_state == Clean) {
+				unshare(CLONE_NEWNS);
 
       if (!umount_root(impl)) {
         LOGE("Failed to umount root");
 
-        if (write_uint8_t(socket_child, 0) == -1)
-          LOGE("Failed to write to socket_child: %s", strerror(errno));
+					if (write_uint8_t(socket_child, 0) == -1)
+						LOGE("Failed to write to socket_child: %s", strerror(errno));
 
-        goto finalize_mns_fork;
-      }
+					goto finalize_mns_fork;
+				}
+			}
     }
 
     if (write_uint8_t(socket_child, 1) == -1) {
