@@ -13,6 +13,8 @@ ZIP_FILE = $(ZIP_DIR)/$(ZIP_NAME)
 
 ifeq ($(TERMUX_VERSION),)
 	ADB_CMD := adb push $(ZIP_FILE) /data/local/tmp && adb shell 
+	ADB_PUSH := adb push
+	ADB_SHELL := adb shell
 	INSTALL_PATH := /data/local/tmp/$(ZIP_NAME)
 	REBOOT_CMD := adb reboot
 else
@@ -141,3 +143,10 @@ clean:
 	rm -rf $(BUILD_DIR)
 	$(MAKE) -C loader clean BUILD_DIR=$(BUILD_DIR)
 	$(MAKE) -C zygiskd clean BUILD_DIR=$(BUILD_DIR)
+
+updateWebUI:
+	@echo Updating WebUI...
+	$(ADB_SHELL) su -c 'rm -rf /data/local/tmp/webroot'
+	$(ADB_PUSH) webroot /data/local/tmp
+	$(ADB_SHELL) su -c 'rm -rf /data/adb/modules/rezygisk/webroot'
+	$(ADB_SHELL) su -c 'cp -r /data/local/tmp/webroot /data/adb/modules/rezygisk'
