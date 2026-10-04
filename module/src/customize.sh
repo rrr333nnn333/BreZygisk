@@ -120,6 +120,19 @@ mkdir "$MODPATH/webroot"
 ui_print "- Extracting webroot"
 unzip -o "$ZIPFILE" "webroot/*" -x "*.sha256" -d "$MODPATH"
 
+# INFO: webroot is JavaScript the root manager executes and the zip ships a
+#       .sha256 for every asset, so verify it too.
+unzip -oq "$ZIPFILE" "webroot/*.sha256" -d "$TMPDIR_FOR_VERIFY" >&2
+( cd "$MODPATH" &&
+  find webroot -type f ! -name '*.sha256' > "$TMPDIR_FOR_VERIFY/webroot.list" &&
+  : > "$TMPDIR_FOR_VERIFY/webroot.sums" &&
+  while read -r f; do
+    d=$(cat "$TMPDIR_FOR_VERIFY/$f.sha256") || exit 1
+    echo "$d  $f" >> "$TMPDIR_FOR_VERIFY/webroot.sums"
+  done < "$TMPDIR_FOR_VERIFY/webroot.list" &&
+  sha256sum -c "$TMPDIR_FOR_VERIFY/webroot.sums" >/dev/null 2>&1
+) || abort_verify "Failed to verify webroot"
+
 # INFO: Utilize the one with the biggest output, as some devices with Tango have the full list
 #         in ro.product.cpu.abilist but others only have a subset there, and the full list in
 #         ro.system.product.cpu.abilist
