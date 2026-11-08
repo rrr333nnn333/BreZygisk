@@ -6,7 +6,7 @@ BUILD_DIR ?= $(ROOT_DIR)/build
 OBJ_ROOT = $(BUILD_DIR)/obj/$(BUILD_TYPE)/loader
 OBJ_DIR = $(OBJ_ROOT)/$(ARCH)
 
-ZKSU_VERSION ?= $(VER_NAME)-$(VER_CODE)-$(COMMIT_HASH)-$(BUILD_TYPE)
+ZKSU_VERSION ?= $(VER_NAME)-$(VER_CODE)-$(VER_CODE2)-$(COMMIT_HASH)-$(BUILD_TYPE)
 
 ifeq ($(BUILD_TYPE),release)
 	TYPE_CFLAGS = -O3 -ffast-math -flto -Wno-unused -Wno-unused-parameter       \
