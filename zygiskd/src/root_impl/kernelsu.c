@@ -92,18 +92,6 @@ void ksu_get_existence(struct root_impl_state *state) {
 
     if (version == 0) state->state = Abnormal;
     else if (version >= MIN_KSU_VERSION) {
-      /* INFO: Some custom kernels for custom ROMs have pre-installed KernelSU.
-              Some users don't want to use KernelSU, but, for example, Magisk.
-              This if allows this to happen, as it checks if "ksud" exists,
-              which in case it doesn't, it won't be considered as supported. */
-      if (access("/data/adb/ksu/bin/ksud", F_OK) == -1) {
-        LOGW("KernelSU %d detected, but ksud not found.", version);
-
-        state->state = Inexistent;
-
-        return;
-      }
-
       state->state = Supported;
 
       char mode[16] = { 0 };

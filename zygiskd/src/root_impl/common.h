@@ -8,11 +8,7 @@
 #include "../constants.h"
 
 enum root_impls {
-  None,
-  Multiple,
-  KernelSU,
-  APatch,
-  Magisk
+  KernelSU
 };
 
 struct root_impl_state {
@@ -33,7 +29,7 @@ void get_impl(struct root_impl *uimpl);
 
 bool uid_granted_root(uid_t uid);
 
-bool uid_should_umount(uid_t uid, const char *const process);
+bool uid_should_umount(uid_t uid);
 
 uid_t uid_from_pkg(const char *restrict pkg);
 

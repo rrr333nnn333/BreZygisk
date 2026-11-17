@@ -25,8 +25,8 @@ ZYGISKD_CFLAGS = -D_GNU_SOURCE -std=c99 -Wpedantic -Wall -Wextra -Werror  \
 				 -DMIN_MAGISK_VERSION=$(MIN_MAGISK_VERSION)               \
 				 '-DZKSU_VERSION="$(ZKSU_VERSION)"' -funroll-loops -fomit-frame-pointer -fstack-protector-strong
 
-SRCS = src/root_impl/apatch.c src/root_impl/common.c        \
-	   src/root_impl/kernelsu.c src/root_impl/magisk.c      \
+SRCS = src/root_impl/common.c        \
+	   src/root_impl/kernelsu.c       \
 	   src/companion.c src/main.c src/utils.c src/zygiskd.c
 
 OBJS = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRCS))

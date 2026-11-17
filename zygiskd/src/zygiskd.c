@@ -290,67 +290,41 @@ void zygiskd_start(char *restrict argv[]) {
 
   struct root_impl impl;
   get_impl(&impl);
-  if (impl.impl == None || impl.impl == Multiple) {
-    const char *msg = NULL;
-    if (impl.impl == None) msg = "Unsupported environment: Unknown root implementation";
-    else msg = "Unsupported environment: Multiple root implementations found";
+	load_modules(&context);
 
-    LOGE("%s", msg);
+	size_t info_len = sizeof(struct rzd_info_payload);
+	for (size_t i = 0; i < context.len; i++) {
+		info_len += strlen(context.modules[i].name) + 1;
+	}
 
-    size_t err_len = strlen(msg) + 1;
+	struct rzd_msg_header *message = malloc(sizeof(struct rzd_msg_header) + info_len);
+	if (message == NULL) {
+		LOGE("Failed allocating info message: %s", strerror(errno));
 
-    struct rzd_msg_header *message = malloc(sizeof(struct rzd_msg_header) + err_len);
-    if (message == NULL) {
-      LOGE("Failed allocating error info message: %s", strerror(errno));
+		free_modules(&context);
+		root_impl_cleanup();
 
-      exit(EXIT_FAILURE);
-    }
+		return;
+	}
 
-    message->cmd = DAEMON_SET_ERROR_INFO;
-    message->len = (uint32_t)err_len;
-    memcpy(message->data, msg, err_len);
+	message->cmd = DAEMON_SET_INFO;
+	message->len = (uint32_t)info_len;
 
-    unix_datagram_sendto(CONTROLLER_SOCKET, message, sizeof(struct rzd_msg_header) + err_len);
-    free(message);
+	struct rzd_info_payload *info = (void *)message->data;
+	stringify_root_impl_name(impl, info->impl);
+	info->modules_count = (uint32_t)context.len;
 
-    exit(EXIT_FAILURE);
-  } else {
-    load_modules(&context);
+	char *raw_payload = info->data;
+	for (size_t i = 0; i < context.len; i++) {
+		size_t module_name_len = strlen(context.modules[i].name);
+		memcpy(raw_payload, context.modules[i].name, module_name_len + 1);
+		raw_payload += module_name_len + 1;
+	}
 
-    size_t info_len = sizeof(struct rzd_info_payload);
-    for (size_t i = 0; i < context.len; i++) {
-      info_len += strlen(context.modules[i].name) + 1;
-    }
+	unix_datagram_sendto(CONTROLLER_SOCKET, message, sizeof(struct rzd_msg_header) + info_len);
+	free(message);
 
-    struct rzd_msg_header *message = malloc(sizeof(struct rzd_msg_header) + info_len);
-    if (message == NULL) {
-      LOGE("Failed allocating info message: %s", strerror(errno));
-
-      free_modules(&context);
-      root_impl_cleanup();
-
-      return;
-    }
-
-    message->cmd = DAEMON_SET_INFO;
-    message->len = (uint32_t)info_len;
-
-    struct rzd_info_payload *info = (void *)message->data;
-    stringify_root_impl_name(impl, info->impl);
-    info->modules_count = (uint32_t)context.len;
-
-    char *raw_payload = info->data;
-    for (size_t i = 0; i < context.len; i++) {
-      size_t module_name_len = strlen(context.modules[i].name);
-      memcpy(raw_payload, context.modules[i].name, module_name_len + 1);
-      raw_payload += module_name_len + 1;
-    }
-
-    unix_datagram_sendto(CONTROLLER_SOCKET, message, sizeof(struct rzd_msg_header) + info_len);
-    free(message);
-
-    LOGI("Sent root implementation and modules information to controller socket");
-  }
+	LOGI("Sent root implementation and modules information to controller socket");
 
   int socket_fd = create_daemon_socket();
   if (socket_fd == -1) {
@@ -418,15 +392,6 @@ void zygiskd_start(char *restrict argv[]) {
         ssize_t ret = read_uint32_t(client_fd, &uid);
         ASSURE_SIZE_READ("GetProcessFlags", "uid", ret, sizeof(uid), break);
 
-        /* INFO: Only used for Magisk, as it saves process names and not UIDs. */
-        char process[PROCESS_NAME_MAX_LEN];
-        ret = read_string(client_fd, process, sizeof(process));
-        if (ret == -1) {
-          LOGE("Failed reading process name.");
-
-          break;
-        }
-
         uint32_t flags = 0;
         if (first_process) {
           flags |= PROCESS_IS_FIRST_STARTED;
@@ -440,30 +405,12 @@ void zygiskd_start(char *restrict argv[]) {
           if (uid_granted_root(uid)) {
             flags |= PROCESS_GRANTED_ROOT;
           }
-          if (uid_should_umount(uid, (const char *const)process)) {
+          if (uid_should_umount(uid)) {
             flags |= PROCESS_ON_DENYLIST;
           }
         }
 
-        switch (impl.impl) {
-          case None: { break; }
-          case Multiple: { break; }
-          case KernelSU: {
-            flags |= PROCESS_ROOT_IS_KSU;
-
-            break;
-          }
-          case APatch: {
-            flags |= PROCESS_ROOT_IS_APATCH;
-
-            break;
-          }
-          case Magisk: {
-            flags |= PROCESS_ROOT_IS_MAGISK;
-
-            break;
-          }
-        }
+				flags |= PROCESS_ROOT_IS_KSU;
 
         ret = write_uint32_t(client_fd, flags);
         ASSURE_SIZE_WRITE("GetProcessFlags", "flags", ret, sizeof(flags), break);
@@ -473,25 +420,7 @@ void zygiskd_start(char *restrict argv[]) {
       case GetInfo: {
         uint32_t flags = 0;
 
-        switch (impl.impl) {
-          case None: { break; }
-          case Multiple: { break; }
-          case KernelSU: {
-            flags |= PROCESS_ROOT_IS_KSU;
-
-            break;
-          }
-          case APatch: {
-            flags |= PROCESS_ROOT_IS_APATCH;
-
-            break;
-          }
-          case Magisk: {
-            flags |= PROCESS_ROOT_IS_MAGISK;
-
-            break;
-          }
-        }
+				flags |= PROCESS_ROOT_IS_KSU;
 
         ssize_t ret = write_uint32_t(client_fd, flags);
         ASSURE_SIZE_WRITE("GetInfo", "flags", ret, sizeof(flags), break);
@@ -647,9 +576,9 @@ void zygiskd_start(char *restrict argv[]) {
         ASSURE_SIZE_WRITE("UpdateMountNamespace", "our_pid", ret, sizeof(our_pid), break);
 
         if ((enum MountNamespaceState)mns_state == Clean)
-          save_mns_fd(pid, Mounted, impl);
+          save_mns_fd(pid, Mounted);
 
-        int ns_fd = save_mns_fd(pid, (enum MountNamespaceState)mns_state, impl);
+        int ns_fd = save_mns_fd(pid, (enum MountNamespaceState)mns_state);
         if (ns_fd == -1) {
           LOGE("Failed to save mount namespace fd for pid %d: %s", pid, strerror(errno));
 

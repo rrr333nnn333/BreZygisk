@@ -41,26 +41,9 @@ if [ "$BOOTMODE" ] && [ "$KSU" ]; then
     ui_print "! Please uninstall Magisk before installing ReZygisk"
     abort    "*********************************************************"
   fi
-  elif [ "$BOOTMODE" ] && [ "$APATCH" ]; then
-    ui_print "- Installing from APatch app"
-    if ! [ "$APATCH_VER_CODE" ] || [ "$APATCH_VER_CODE" -lt "$MIN_APATCH_VERSION" ]; then
-      ui_print "*********************************************************"
-      ui_print "! APatch version is too old!"
-      ui_print "! Please update APatch to latest version"
-      abort    "*********************************************************"
-    fi
-elif [ "$BOOTMODE" ] && [ "$MAGISK_VER_CODE" ]; then
-  ui_print "- Installing from Magisk app"
-  if [ "$MAGISK_VER_CODE" -lt "$MIN_MAGISK_VERSION" ]; then
-    ui_print "*********************************************************"
-    ui_print "! Magisk version is too old!"
-    ui_print "! Please update Magisk to latest version"
-    abort    "*********************************************************"
-  fi
 else
   ui_print "*********************************************************"
-  ui_print "! Install from recovery is not supported"
-  ui_print "! Please install from KernelSU or Magisk app"
+  ui_print "! Only KernelSU is supported"
   abort    "*********************************************************"
 fi
 

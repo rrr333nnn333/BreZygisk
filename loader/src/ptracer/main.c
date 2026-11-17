@@ -67,23 +67,8 @@ int main(int argc, char **argv) {
     printf("Daemon process PID: %d\n", info.pid);
 
     switch (info.root_impl) {
-      case ROOT_IMPL_NONE: {
-        printf("Root implementation: none\n");
-
-        break;
-      }
-      case ROOT_IMPL_APATCH: {
-        printf("Root implementation: APatch\n");
-
-        break;
-      }
       case ROOT_IMPL_KERNELSU: {
         printf("Root implementation: KernelSU\n");
-
-        break;
-      }
-      case ROOT_IMPL_MAGISK: {
-        printf("Root implementation: Magisk\n");
 
         break;
       }

@@ -65,13 +65,7 @@ $(ZYGISKD_DONE): $(ZYGISKD_INPUTS)
 $(MODULE_DONE): $(LOADER_DONE) $(ZYGISKD_DONE) $(MODULE_INPUTS)
 
 	@rm -rf $(MODULE_OUT)
-	@mkdir -p $(MODULE_OUT)/META-INF/com/google/android
-
-	@echo "Copying META-INF files..."
-	@cp module/src/META-INF/com/google/android/update-binary  \
-	   module/src/META-INF/com/google/android/updater-script \
-	   $(MODULE_OUT)/META-INF/com/google/android/
-
+	@mkdir -p $(MODULE_OUT)
 
 	@echo "Copying module files..."
 	@cp module/src/verify.sh module/src/sepolicy.rule module/src/rezygisk.sh $(MODULE_OUT)/
