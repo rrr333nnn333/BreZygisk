@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
       get_impl(&impl);
 
       char impl_name[LONGEST_ROOT_IMPL_NAME];
-      stringify_root_impl_name(impl, impl_name);
+      stringify_root_impl_name(impl_name);
 
       LOGI("Root implementation: %s", impl_name);
 

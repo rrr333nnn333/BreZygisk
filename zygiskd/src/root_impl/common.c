@@ -20,7 +20,6 @@ void root_impls_setup(void) {
             Remember that true here is equal to the integer 1. */
   if (state_ksu.state == Supported) {
     impl.impl = KernelSU;
-    impl.variant = state_ksu.variant;
   }
 
 	LOGI("KernelSU root implementation found.\n");

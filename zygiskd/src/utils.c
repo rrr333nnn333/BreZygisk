@@ -454,15 +454,8 @@ int non_blocking_execv(const char *restrict file, char *const argv[]) {
   return -1;
 }
 
-void stringify_root_impl_name(struct root_impl impl, char *restrict output) {
-  switch (impl.impl) {
-    case KernelSU: {
-      if (impl.variant == KOfficial) strcpy(output, "KernelSU");
-      else strcpy(output, "KernelSU Next");
-
-      break;
-    }
-  }
+void stringify_root_impl_name(char *restrict output) {
+	strcpy(output, "KernelSU");
 }
 
 struct mountinfo {

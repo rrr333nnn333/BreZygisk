@@ -166,7 +166,7 @@ struct rzd_msg_header {
   char data[0];
 } __attribute__((packed));
 
-#define LONGEST_ROOT_IMPL_NAME sizeof("KernelSU Next")
+#define LONGEST_ROOT_IMPL_NAME sizeof("KernelSU")
 
 struct rzd_info_payload {
   char impl[LONGEST_ROOT_IMPL_NAME];
