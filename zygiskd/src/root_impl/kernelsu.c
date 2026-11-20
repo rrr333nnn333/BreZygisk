@@ -3,7 +3,6 @@
 
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include <sys/prctl.h>
 #include <sys/stat.h>
 #include <sys/syscall.h>
 #include <sys/system_properties.h>
@@ -13,19 +12,12 @@
 
 #include "kernelsu.h"
 
-const char *ksu_manager_pkg = "me.weishu.kernelsu";
-
 /* INFO: It would be presumed it is a unsigned int,
            so we need to cast it to signed int to
            avoid any potential UB.
 */
 #define KSU_INSTALL_MAGIC1 (int)0xDEADBEEF
 #define KSU_INSTALL_MAGIC2 (int)0xCAFEBABE
-
-#define CMD_GET_VERSION 2
-#define CMD_UID_GRANTED_ROOT 12
-#define CMD_UID_SHOULD_UMOUNT 13
-#define CMD_HOOK_MODE 0xC0DEAD1A
 
 struct ksu_uid_granted_root_cmd {
   uint32_t uid;
@@ -53,51 +45,8 @@ struct ksu_set_feature_cmd {
 
 static int ksu_fd = -1;
 
-static bool ksu_uses_new_ksuctl = false;
-
 void ksu_get_existence(struct root_impl_state *state) {
-  char platform[PROP_VALUE_MAX];
-  get_property("ro.board.platform", platform);
-
-  /* INFO: On Waydroid, the SYS_reboot call will trigger a SIGSYS signal, resulting
-             in the crash of ReZygiskd. To avoid that, read the platform property
-             and not try to call KernelSU v3 interface, jumping to KernelSU v1
-             interface which doesn't require the SYS_reboot call. */
-  if (strcmp(platform, "waydroid") == 0)
-    goto try_prctl;
-
   syscall(SYS_reboot, KSU_INSTALL_MAGIC1, KSU_INSTALL_MAGIC2, 0, (void *)&ksu_fd);
-  if (ksu_fd == -1) {
-    try_prctl:
-
-    /* INFO: Perhaps it uses the old ksuctl interface */
-    int reply_ok = 0;
-
-    int version = 0;
-    prctl(KSU_INSTALL_MAGIC1, CMD_GET_VERSION, &version, 0, &reply_ok);
-
-    if (version == 0) state->state = Abnormal;
-    else if (version >= MIN_KSU_VERSION) {
-      state->state = Supported;
-
-      char mode[16] = { 0 };
-      prctl(KSU_INSTALL_MAGIC1, CMD_HOOK_MODE, mode, NULL, &reply_ok);
-    }
-    else if (version >= 1 && version <= MIN_KSU_VERSION - 1) state->state = TooOld;
-    else state->state = Abnormal;
-
-    return;
-  }
-
-  if (access("/data/adb/ksu/bin/ksud", F_OK) == -1) {
-    LOGW("KernelSU (ioctl) detected, but ksud not found.");
-
-    state->state = Inexistent;
-
-    return;
-  }
-
-  ksu_uses_new_ksuctl = true;
 
   struct ksu_set_feature_cmd cmd = {
     .feature_id = 1, /* INFO: kernel_umount */
@@ -115,16 +64,6 @@ void ksu_get_existence(struct root_impl_state *state) {
 }
 
 bool ksu_uid_granted_root(uid_t uid) {
-  if (!ksu_uses_new_ksuctl) {
-    bool granted = false;
-    uint32_t result = 0;
-    prctl(KSU_INSTALL_MAGIC1, CMD_UID_GRANTED_ROOT, uid, &granted, &result);
-
-    if ((int)result != KSU_INSTALL_MAGIC1) return false;
-
-    return granted;
-  }
-
   struct ksu_uid_granted_root_cmd cmd = {
     .uid = uid,
     .granted = 0
@@ -140,16 +79,6 @@ bool ksu_uid_granted_root(uid_t uid) {
 }
 
 bool ksu_uid_should_umount(uid_t uid) {
-  if (!ksu_uses_new_ksuctl) {
-    bool should_umount = false;
-    uint32_t result = 0;
-    prctl(KSU_INSTALL_MAGIC1, CMD_UID_SHOULD_UMOUNT, uid, &should_umount, &result);
-
-    if ((int)result != KSU_INSTALL_MAGIC1) return false;
-
-    return should_umount;
-  }
-
   struct ksu_uid_should_umount_cmd cmd = {
     .uid = uid,
     .should_umount = 0
@@ -165,17 +94,6 @@ bool ksu_uid_should_umount(uid_t uid) {
 }
 
 bool ksu_uid_is_manager(uid_t uid) {
-  if (!ksu_uses_new_ksuctl) {
-    uid_t manager_uid = uid_from_pkg(ksu_manager_pkg);
-    if (!manager_uid) {
-      LOGE("Failed to retrieve uid for %s", ksu_manager_pkg);
-
-      return false;
-    }
-
-    return APP_ID(uid) == manager_uid;
-  }
-
   /* INFO: If it uses ioctl, it already has support to get manager UID operation */
   struct ksu_get_manager_uid_cmd cmd;
   if (ioctl(ksu_fd, KSU_IOCTL_GET_MANAGER_UID, &cmd) == -1) {

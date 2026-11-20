@@ -10,8 +10,8 @@ VER_CODE2 ?= $(shell git -C "$(ROOT_DIR)" rev-list upstream/main..HEAD --count 2
 COMMIT_HASH ?= $(shell git -C "$(ROOT_DIR)" rev-parse --verify --short HEAD 2>/dev/null || echo unknown)
 
 MIN_APATCH_VERSION ?= 10655
-MIN_KSU_VERSION ?= 10940
-MIN_KSUD_VERSION ?= 11425
+MIN_KSU_VERSION ?= 20000
+MIN_KSUD_VERSION ?= 20000
 MIN_MAGISK_VERSION ?= 26402
 
 MODULE_ID ?= rezygisk
