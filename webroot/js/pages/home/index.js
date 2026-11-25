@@ -68,6 +68,13 @@ async function _getAndroidVersion() {
   }
 }
 
+/* INFO: Elements may not exist in every layout version of the page, so
+           avoid crashing on missing ones. */
+function _hideElement(id) {
+  const element = document.getElementById(id)
+  if (element) element.style.display = 'none'
+}
+
 async function _updateDynamicElement(firstRun, ReZygiskState, strings) {
   const rootCss = document.querySelector(':root')
   const rz_state = document.getElementById('rz_state')
@@ -85,15 +92,15 @@ async function _updateDynamicElement(firstRun, ReZygiskState, strings) {
 
   /* INFO: Just ensure that they won't appear unless there's info */
   zygote_divs.forEach((zygote_div) => {
-    zygote_div.style.display = 'none'
+    if (zygote_div) zygote_div.style.display = 'none'
   })
 
   if (ReZygiskState == null) {
     rz_state.innerHTML = strings.unknown
     rz_icon_state.innerHTML = '<img class="brightc" src="assets/mark.svg">'
-    document.getElementById('zygote_class').style.display = 'none'
+    _hideElement('zygote_class')
     /* INFO: This hides the throbber screen */
-    loading_screen.style.display = 'none'
+    _hideElement('loading_screen')
     return;
   }
 
@@ -101,7 +108,7 @@ async function _updateDynamicElement(firstRun, ReZygiskState, strings) {
     rzState.expectedWorking = ReZygiskState.zygote === undefined ? 0 : (ReZygiskState.zygote['64'] !== undefined ? 1 : 0) + (ReZygiskState.zygote['32'] !== undefined ? 1 : 0)
   }
 
-  if (ReZygiskState.zygote['64'] && ReZygiskState.zygote !== undefined) {
+  if (ReZygiskState.zygote && ReZygiskState.zygote['64'] !== undefined) {
     const zygote64 = ReZygiskState.zygote['64']
 
     zygote_divs[0].style.display = 'block'
@@ -139,7 +146,7 @@ async function _updateDynamicElement(firstRun, ReZygiskState, strings) {
 
   if (rzState.expectedWorking === 0 || rzState.actuallyWorking === 0) {
     rz_state.innerHTML = strings.status.notWorking
-    document.getElementById('zygote_class').style.display = 'none'
+    _hideElement('zygote_class')
   } else if (rzState.expectedWorking === rzState.actuallyWorking) {
     rz_state.innerHTML = strings.status.ok
 
@@ -153,7 +160,7 @@ async function _updateDynamicElement(firstRun, ReZygiskState, strings) {
   }
 
   if (ReZygiskState.zygote === undefined) {
-    document.getElementById('zygote_class').style.display = 'none'
+    _hideElement('zygote_class')
   }
 }
 
@@ -176,10 +183,10 @@ export async function loadOnceView() {
 
   document.getElementById('root_impl').innerHTML = root_impl
 
-  _updateDynamicElement(true, ReZygiskState, strings)
+  await _updateDynamicElement(true, ReZygiskState, strings)
 
   /* INFO: This hides the throbber screen */
-  loading_screen.style.display = 'none'
+  _hideElement('loading_screen')
 }
 
 export async function onceViewAfterUpdate() {

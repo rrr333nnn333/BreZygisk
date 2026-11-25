@@ -86,13 +86,12 @@ bool rezygiskd_zygote_injected() {
   return true;
 }
 
-uint32_t rezygiskd_get_process_flags(uid_t uid, const char *const process) {
+uint32_t rezygiskd_get_process_flags(uid_t uid) {
   int fd = rezygiskd_connect(1);
   if (fd == -1) return 0;
 
   safe_write(write_uint8_t(fd, (uint8_t)GetProcessFlags), "GetProcessFlags action", return 0);
   safe_write(write_uint32_t(fd, (uint32_t)uid), "uid", return 0);
-  safe_write(write_string(fd, process), "process name", return 0);
 
   uint32_t res = 0;
   safe_read(read_uint32_t(fd, &res), "process flags", return 0);
