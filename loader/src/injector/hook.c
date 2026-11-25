@@ -1233,7 +1233,7 @@ static void rz_app_specialize_pre(struct zygisk_context *ctx) {
     (*ctx->env)->ReleaseStringUTFChars(ctx->env, *ctx->args.app->app_data_dir, data_dir);
   }
 
-  ctx->info_flags = rezygiskd_get_process_flags(uid, ctx->process);
+  ctx->info_flags = rezygiskd_get_process_flags(uid);
   /* INFO: To ensure we are really using a clean mount namespace, we use
               the first process it as reference for clean mount namespace,
               before it even does something, so that it will be clean yet

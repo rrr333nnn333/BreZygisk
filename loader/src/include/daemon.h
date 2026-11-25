@@ -46,7 +46,7 @@ static inline const char *rezygiskd_get_path() {
 
 bool rezygiskd_zygote_injected();
 
-uint32_t rezygiskd_get_process_flags(uid_t uid, const char *const process);
+uint32_t rezygiskd_get_process_flags(uid_t uid);
 
 void rezygiskd_get_info(struct rezygisk_info *info);
 
